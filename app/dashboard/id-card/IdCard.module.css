@@ -1,0 +1,179 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cardWrapper {
+  padding: 20px;
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e1;
+  display: inline-block;
+}
+
+.idCard {
+  width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  position: relative;
+  font-family: Arial, sans-serif;
+  border: 1px solid var(--border-color);
+}
+
+.idCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(45deg, rgba(26, 54, 93, 0.02) 0px, rgba(26, 54, 93, 0.02) 2px, transparent 2px, transparent 10px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cardHeader {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.logoMark {
+  background-color: white;
+  color: var(--primary-color);
+  font-weight: 800;
+  font-size: 1.5rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.partyName {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.cardTitle {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.cardBody {
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.photoContainer {
+  width: 110px;
+  height: 140px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 3px solid var(--primary-color);
+  background-color: var(--light-gray);
+  flex-shrink: 0;
+}
+
+.photoContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.memberDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detailGroup label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.detailGroup .value {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.detailRow {
+  display: flex;
+  gap: 20px;
+}
+
+.cardFooter {
+  background-color: var(--light-gray);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1;
+}
+
+.signature {
+  font-family: 'Brush Script MT', cursive, sans-serif;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  border-bottom: 1px dashed var(--text-muted);
+  padding-bottom: 4px;
+}
+
+.barcode {
+  width: 120px;
+}
+
+@media (max-width: 500px) {
+  .idCard {
+    width: 320px;
+  }
+  
+  .cardBody {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .detailRow {
+    justify-content: center;
+  }
+}
