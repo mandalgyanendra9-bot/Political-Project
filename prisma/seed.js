@@ -55,7 +55,13 @@ async function main() {
     },
   ];
   for (const item of newsItems) {
-    await prisma.news.create({ data: item });
+    const existingNews = await prisma.news.findFirst({
+      where: { title: item.title },
+      select: { id: true },
+    });
+    if (!existingNews) {
+      await prisma.news.create({ data: item });
+    }
   }
 
   // 4. Sample events
@@ -78,6 +84,18 @@ async function main() {
   ];
   const createdEvents = [];
   for (const ev of eventsData) {
+    const existingEvent = await prisma.event.findFirst({
+      where: {
+        title: ev.title,
+        date: ev.date,
+      },
+      select: { id: true },
+    });
+    if (existingEvent) {
+      createdEvents.push(existingEvent);
+      continue;
+    }
+
     const e = await prisma.event.create({ data: ev });
     createdEvents.push(e);
   }
@@ -88,14 +106,17 @@ async function main() {
     { userId: members[1].id, amount: 75.5 },
     { userId: admin.id, amount: 100.0 },
   ];
-  for (const d of donationsData) {
-    await prisma.donation.create({
-      data: {
-        userId: d.userId,
-        amount: d.amount,
-        referenceId: `SEED-${Date.now()}-${Math.round(Math.random() * 1000)}`,
-      },
-    });
+  const donationCount = await prisma.donation.count();
+  if (donationCount === 0) {
+    for (const d of donationsData) {
+      await prisma.donation.create({
+        data: {
+          userId: d.userId,
+          amount: d.amount,
+          referenceId: `SEED-${Date.now()}-${Math.round(Math.random() * 1000)}`,
+        },
+      });
+    }
   }
 
   console.log('Seed data inserted successfully.');
