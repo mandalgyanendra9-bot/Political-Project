@@ -28,6 +28,7 @@ model News {
   title     String
   content   String
   type      String   @default("NEWS") // NEWS, CAMPAIGN, RALLY
+  isPublished Boolean @default(true)
   imageUrl  String?
   videoUrl  String?
   createdAt DateTime @default(now())

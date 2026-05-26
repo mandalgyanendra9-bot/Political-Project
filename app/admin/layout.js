@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import { getUserSession } from '@/lib/auth';
 import Link from 'next/link';
-import { Users, FileText, Calendar, LayoutDashboard, Home } from 'lucide-react';
+import { Users, FileText, Calendar, LayoutDashboard, Home, HandCoins } from 'lucide-react';
+import styles from './Admin.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,35 +18,36 @@ export default async function AdminLayout({ children }) {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 80px)', backgroundColor: 'var(--light-gray)' }}>
-      {/* Admin Sidebar */}
-      <div style={{ width: '280px', backgroundColor: 'var(--primary-color)', color: 'white', padding: '24px 0', flexShrink: 0 }}>
-        <div style={{ padding: '0 24px', marginBottom: '32px' }}>
-          <h2 style={{ color: 'white', fontSize: '1.2rem', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '1px' }}>Admin CMS</h2>
+    <div className={styles.adminRoot}>
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <h2 className={styles.sidebarTitle}>Admin Panel</h2>
         </div>
-        
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', color: 'white', opacity: 0.9 }}>
+
+        <nav className={styles.nav}>
+          <Link href="/admin" className={styles.navLink}>
             <LayoutDashboard size={20} /> Dashboard
           </Link>
-          <Link href="/admin/members" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', color: 'white', opacity: 0.9 }}>
+          <Link href="/admin/members" className={styles.navLink}>
             <Users size={20} /> Members
           </Link>
-          <Link href="/admin/news" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', color: 'white', opacity: 0.9 }}>
+          <Link href="/admin/news" className={styles.navLink}>
             <FileText size={20} /> News & Updates
           </Link>
-          <Link href="/admin/events" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', color: 'white', opacity: 0.9 }}>
+          <Link href="/admin/events" className={styles.navLink}>
             <Calendar size={20} /> Events
           </Link>
-          <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', margin: '16px 0' }}></div>
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', color: 'white', opacity: 0.7 }}>
+          <Link href="/admin/donations" className={styles.navLink}>
+            <HandCoins size={20} /> Donations
+          </Link>
+          <div className={styles.navSeparator} />
+          <Link href="/dashboard" className={styles.navLink}>
             <Home size={20} /> Exit Admin
           </Link>
         </nav>
       </div>
 
-      {/* Admin Content */}
-      <div style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
+      <div className={styles.content}>
         {children}
       </div>
     </div>
