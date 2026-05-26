@@ -26,9 +26,9 @@ export default function Footer() {
           {/* Brand & About */}
           <div className={styles.footerCol}>
             <Link href="/" className={styles.logo}>
-              <div className={styles.logoMark}>PDP</div>
+              <div className={styles.logoMark}>UAP</div>
               <div className={styles.logoText}>
-                <span className={styles.partyName}>Progressive Democratic</span>
+                <span className={styles.partyName}>Unchi Awaaj</span>
                 <span className={styles.partySub}>Party</span>
               </div>
             </Link>
@@ -70,7 +70,7 @@ export default function Footer() {
               </li>
               <li>
                 <Mail size={18} className={styles.contactIcon} />
-                <span>contact@pdparty.in</span>
+                <span>unchiawaajparty@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -79,7 +79,7 @@ export default function Footer() {
 
       <div className={styles.footerBottom}>
         <div className={`container ${styles.bottomContainer}`}>
-          <p>&copy; {new Date().getFullYear()} Progressive Democratic Party (PDP). All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Unchi Awaaj Party. All rights reserved.</p>
           <div className={styles.legalLinks}>
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>

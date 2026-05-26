@@ -25,7 +25,7 @@ export default function Navbar() {
         <Link href="/" className={styles.logo}>
           <div className={styles.logoMark}>PDP</div>
           <div className={styles.logoText}>
-            <span className={styles.partyName}>Progressive Democratic</span>
+            <span className={styles.partyName}>Unchi Awaaj</span>
             <span className={styles.partySub}>Party</span>
           </div>
         </Link>
