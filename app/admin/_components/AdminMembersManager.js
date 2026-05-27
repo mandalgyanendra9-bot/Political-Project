@@ -18,8 +18,9 @@ function statusBadgeClass(status) {
   return 'badge-pending';
 }
 
-export default function AdminMembersManager({ initialMembers }) {
+export default function AdminMembersManager({ initialMembers, currentUserId }) {
   const [members, setMembers] = useState(initialMembers);
+  const [loadingMembers, setLoadingMembers] = useState(false);
   const [savingId, setSavingId] = useState('');
   const [statusMap, setStatusMap] = useState(() =>
     initialMembers.reduce((acc, member) => {
@@ -35,6 +36,27 @@ export default function AdminMembersManager({ initialMembers }) {
     [members]
   );
 
+  function isProtectedSelf(member) {
+    return member.id === currentUserId && member.role === 'ADMIN' && member.status === 'ACTIVE';
+  }
+
+  async function refreshMembers() {
+    setLoadingMembers(true);
+    try {
+      const res = await fetch('/api/admin/members', { method: 'GET' });
+      const data = await parseJson(res);
+      setMembers(data.items || []);
+      setStatusMap(
+        (data.items || []).reduce((acc, member) => {
+          acc[member.id] = member.status;
+          return acc;
+        }, {})
+      );
+    } finally {
+      setLoadingMembers(false);
+    }
+  }
+
   async function saveStatus(memberId, nextStatus) {
     setError('');
     setSuccess('');
@@ -49,6 +71,7 @@ export default function AdminMembersManager({ initialMembers }) {
       const data = await parseJson(res);
       setMembers((prev) => prev.map((member) => (member.id === memberId ? data.item : member)));
       setStatusMap((prev) => ({ ...prev, [memberId]: data.item.status }));
+      await refreshMembers();
       setSuccess('Member status updated successfully.');
     } catch (err) {
       setError(err.message);
@@ -64,6 +87,7 @@ export default function AdminMembersManager({ initialMembers }) {
 
       {error && <div className={styles.errorBox}>{error}</div>}
       {success && <div className={styles.successBox}>{success}</div>}
+      {loadingMembers && <div className={styles.inlineLoader}>Refreshing members...</div>}
 
       <div className="card">
         <div className="card-body">
@@ -103,9 +127,14 @@ export default function AdminMembersManager({ initialMembers }) {
                           value={statusMap[member.id] || member.status}
                           onChange={(e) => setStatusMap((prev) => ({ ...prev, [member.id]: e.target.value }))}
                           style={{ minWidth: '120px', padding: '8px 10px' }}
+                          disabled={savingId === member.id}
                         >
                           {STATUS_OPTIONS.map((status) => (
-                            <option key={status} value={status}>
+                            <option
+                              key={status}
+                              value={status}
+                              disabled={isProtectedSelf(member) && status !== 'ACTIVE'}
+                            >
                               {status}
                             </option>
                           ))}
@@ -115,7 +144,10 @@ export default function AdminMembersManager({ initialMembers }) {
                           className="btn btn-primary"
                           type="button"
                           onClick={() => saveStatus(member.id, statusMap[member.id] || member.status)}
-                          disabled={savingId === member.id}
+                          disabled={
+                            savingId === member.id ||
+                            (isProtectedSelf(member) && (statusMap[member.id] || member.status) !== 'ACTIVE')
+                          }
                           style={{ padding: '8px 12px' }}
                         >
                           {savingId === member.id ? 'Saving...' : 'Save'}
@@ -135,7 +167,7 @@ export default function AdminMembersManager({ initialMembers }) {
                           className="btn btn-outline"
                           type="button"
                           onClick={() => saveStatus(member.id, 'REJECTED')}
-                          disabled={savingId === member.id}
+                          disabled={savingId === member.id || isProtectedSelf(member)}
                           style={{ padding: '8px 12px' }}
                         >
                           Reject

@@ -68,6 +68,13 @@ async function main() {
     });
   }
 
+  if (primaryAdminEmail !== 'admin@uap.test') {
+    await prisma.user.updateMany({
+      where: { email: 'admin@uap.test' },
+      data: { role: 'MEMBER', status: 'REJECTED' },
+    });
+  }
+
   // 2. Sample members
   const memberPassword = await bcrypt.hash('Member123!', 10);
   const membersData = [

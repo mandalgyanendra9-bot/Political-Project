@@ -36,8 +36,13 @@ export async function PATCH(request, context) {
       return badRequest('No valid fields to update');
     }
 
-    if (auth.session.userId === id && updateData.role && updateData.role !== 'ADMIN') {
-      return badRequest('You cannot remove your own admin role');
+    if (auth.session.userId === id) {
+      if (updateData.role && updateData.role !== 'ADMIN') {
+        return badRequest('You cannot remove your own admin role');
+      }
+      if (updateData.status && updateData.status !== 'ACTIVE') {
+        return badRequest('You cannot set your own account to a non-active status');
+      }
     }
 
     const updated = await prisma.user.update({
