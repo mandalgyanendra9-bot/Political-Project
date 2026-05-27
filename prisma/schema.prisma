@@ -21,6 +21,7 @@ model User {
   
   donations     Donation[]
   registrations EventRegistration[]
+  donationPaymentAttempts DonationPaymentAttempt[]
 }
 
 model News {
@@ -67,8 +68,31 @@ model Donation {
   userId      String?
   amount      Float
   referenceId String
-  status      String   @default("COMPLETED")
+  status      String   @default("SUCCESS") // SUCCESS, FAILED
+  paymentMode String   @default("ONLINE") // ONLINE, MANUAL
+  gateway     String?
+  gatewayOrderId String?
+  gatewayPaymentId String? @unique
+  gatewaySignature String?
+  verifiedAt  DateTime?
+  notes       String?
   createdAt   DateTime @default(now())
   
   user        User?    @relation(fields: [userId], references: [id])
+}
+
+model DonationPaymentAttempt {
+  id              String   @id @default(uuid())
+  userId          String?
+  amount          Float
+  currency        String   @default("INR")
+  status          String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  gateway         String   @default("RAZORPAY")
+  gatewayOrderId  String   @unique
+  gatewayPaymentId String?
+  failureReason   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User?    @relation(fields: [userId], references: [id])
 }

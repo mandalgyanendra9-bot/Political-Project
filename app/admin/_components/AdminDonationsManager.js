@@ -97,8 +97,7 @@ export default function AdminDonationsManager({ initialItems, members }) {
                 onChange={(e) => setFilters((prev) => ({ ...prev, status: e.target.value }))}
               >
                 <option value="">All Statuses</option>
-                <option value="COMPLETED">COMPLETED</option>
-                <option value="PENDING">PENDING</option>
+                <option value="SUCCESS">SUCCESS</option>
                 <option value="FAILED">FAILED</option>
               </select>
             </div>
@@ -174,7 +173,7 @@ export default function AdminDonationsManager({ initialItems, members }) {
                     <td>{donation.user?.email || '-'}</td>
                     <td>Rs {Number(donation.amount || 0).toLocaleString()}</td>
                     <td>
-                      <span className={`badge ${donation.status === 'COMPLETED' ? 'badge-active' : 'badge-pending'}`}>
+                      <span className={`badge ${donation.status === 'SUCCESS' ? 'badge-active' : 'badge-pending'}`}>
                         {donation.status}
                       </span>
                     </td>

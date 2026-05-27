@@ -5,7 +5,11 @@ export default async function DonationsPage() {
   const session = await getUserSession();
 
   const donations = await prisma.donation.findMany({
-    where: { userId: session.userId },
+    where: {
+      userId: session.userId,
+      paymentMode: 'ONLINE',
+      status: 'SUCCESS',
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -17,7 +21,7 @@ export default async function DonationsPage() {
         <div className="card-body">
           {donations.length === 0 ? (
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '20px 0' }}>
-              You haven&apos;t made any donations yet.
+              You don&apos;t have any verified successful online donations yet.
             </p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
