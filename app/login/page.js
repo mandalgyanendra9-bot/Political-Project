@@ -34,7 +34,8 @@ export default function Login() {
         throw new Error(data.error || 'Login failed');
       }
 
-      router.push('/dashboard');
+      const destination = data?.user?.role === 'ADMIN' ? '/admin' : '/dashboard';
+      router.push(destination);
       router.refresh();
     } catch (err) {
       setError(err.message);

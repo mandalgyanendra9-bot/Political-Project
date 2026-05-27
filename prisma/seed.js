@@ -34,16 +34,39 @@ async function upsertUserByMobile({
 }
 
 async function main() {
-  // 1. Default admin user
-  const adminPassword = await bcrypt.hash('Admin123!', 10);
-  const admin = await upsertUserByMobile({
-    name: 'Admin User',
-    email: 'admin@uap.test',
-    mobile: '9999999999',
-    password: adminPassword,
-    role: 'ADMIN',
-    status: 'ACTIVE',
-  });
+  // 1. Promote primary admin (no hard dependency on demo admin account)
+  const primaryAdminEmail = (process.env.PRIMARY_ADMIN_EMAIL || 'mandalgyanu2823297@gmail.com')
+    .trim()
+    .toLowerCase();
+  const primaryAdminName = (process.env.PRIMARY_ADMIN_NAME || 'Primary Admin').trim();
+  const primaryAdminMobile = (process.env.PRIMARY_ADMIN_MOBILE || '').trim();
+  const primaryAdminPasswordRaw = String(process.env.PRIMARY_ADMIN_PASSWORD || '').trim();
+
+  let primaryAdmin = null;
+
+  if (primaryAdminMobile && primaryAdminPasswordRaw) {
+    const primaryAdminPassword = await bcrypt.hash(primaryAdminPasswordRaw, 10);
+    primaryAdmin = await upsertUserByMobile({
+      name: primaryAdminName,
+      email: primaryAdminEmail,
+      mobile: primaryAdminMobile,
+      password: primaryAdminPassword,
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    });
+  } else {
+    const promoted = await prisma.user.updateMany({
+      where: { email: primaryAdminEmail },
+      data: { role: 'ADMIN', status: 'ACTIVE' },
+    });
+    if (promoted.count === 0) {
+      console.warn(`Primary admin email not found during seed: ${primaryAdminEmail}`);
+    }
+    primaryAdmin = await prisma.user.findUnique({
+      where: { email: primaryAdminEmail },
+      select: { id: true },
+    });
+  }
 
   // 2. Sample members
   const memberPassword = await bcrypt.hash('Member123!', 10);
@@ -125,7 +148,7 @@ async function main() {
   const donationsData = [
     { userId: members[0].id, amount: 50.0 },
     { userId: members[1].id, amount: 75.5 },
-    { userId: admin.id, amount: 100.0 },
+    ...(primaryAdmin?.id ? [{ userId: primaryAdmin.id, amount: 100.0 }] : []),
   ];
 
   const donationCount = await prisma.donation.count();
