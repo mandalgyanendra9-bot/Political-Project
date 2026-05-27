@@ -51,7 +51,7 @@ export async function POST(request) {
         },
       });
 
-      const existingDonation = await tx.donation.findUnique({
+      const existingDonation = await tx.donation.findFirst({
         where: { gatewayPaymentId: paymentId },
       });
 

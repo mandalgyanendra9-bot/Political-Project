@@ -72,7 +72,7 @@ model Donation {
   paymentMode String   @default("ONLINE") // ONLINE, MANUAL
   gateway     String?
   gatewayOrderId String?
-  gatewayPaymentId String? @unique
+  gatewayPaymentId String?
   gatewaySignature String?
   verifiedAt  DateTime?
   notes       String?
